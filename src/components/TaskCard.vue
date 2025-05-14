@@ -1,0 +1,52 @@
+<script setup lang="ts">
+import { PriorityLabelMap, PriorityThemesMap, type Task } from '@/types.ts'
+import Tag from 'primevue/tag'
+import Checkbox from 'primevue/checkbox'
+import { computed } from 'vue'
+import { formatDateWithDetails } from '@/utils/formatDate.ts'
+
+const task = defineModel<Task>('task', { required: true })
+const formatedDate = computed(() =>
+  task.value?.deadline ? formatDateWithDetails(task.value?.deadline) : undefined,
+)
+</script>
+
+<template>
+  <div
+    :class="
+      !task.isDone && task.deadline && new Date(task.deadline) < new Date()
+        ? 'border-red-500 bg-red-50'
+        : 'border-gray-800 bg-white'
+    "
+    class="p-4 border-2 rounded-lg shadow-md flex flex-col gap-1 !min-w-[18rem]"
+  >
+    <div class="flex">
+      <div class="flex items-center gap-2">
+        <Checkbox v-model="task.isDone" binary />
+        <span class="!font-semibold !mr-2" :class="task.isDone ? 'line-through' : ''">{{
+          task.name
+        }}</span>
+      </div>
+
+      <Tag
+        class="ml-auto"
+        v-if="task.priority"
+        :value="PriorityLabelMap[task.priority]"
+        :severity="PriorityThemesMap[task.priority]"
+      />
+    </div>
+    <p>{{ task.description }}</p>
+    <div class="flex gap-2 flex-wrap" v-if="task.tags.length > 0">
+      <div
+        class="inline-block py-1 px-3 text-sm font-semibold bg-gray-200 rounded-full"
+        v-for="(tag, id) in task.tags"
+        :key="id"
+      >
+        {{ tag }}
+      </div>
+    </div>
+    <p v-if="formatedDate && !task.isDone" class="!mt-auto">{{ formatedDate }}</p>
+  </div>
+</template>
+
+<style scoped></style>
