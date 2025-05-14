@@ -139,13 +139,18 @@ const onTagToggle = ($form: any, e: { value: string[] }) => {
           inputId="priority"
           :options="priorityList"
           optionLabel="label"
+          optionValue="value"
           class="w-full"
         >
           <template #option="{ option }">
             <Tag :severity="option.theme" :value="option.label" />
           </template>
           <template #value="{ value }">
-            <Tag :value="value?.label" :severity="value?.theme" v-if="value" />
+            <Tag
+              v-if="value"
+              :value="PriorityLabelMap[value]"
+              :severity="PriorityThemesMap[value]"
+            />
           </template>
         </Dropdown>
         <label for="priority">Приоритет</label>
