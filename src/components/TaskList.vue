@@ -48,7 +48,7 @@ watch(
   { deep: true },
 )
 
-const onDragEnd = (event) => {
+const onDragEnd = () => {
   isDragging.value = false
   reorderTasks([...visibleTasks.value])
 }
