@@ -17,6 +17,7 @@ import { taskValidationSchema } from '@/models/taskValidation.ts'
 import { priorityList } from '@/models/selectOptions.ts'
 
 const hasDuplicateError = defineModel<boolean>('hasDuplicateError', { required: true })
+const visible = ref(true)
 const emit = defineEmits<{ close: []; create: [Omit<Task, 'id' | 'isDone'>] }>()
 const resolver = zodResolver(taskValidationSchema)
 const initialValues = ref<Omit<Task, 'id' | 'isDone'>>({
@@ -48,19 +49,14 @@ const onTagToggle = ($form: any, e: { value: string[] }) => {
 
 <template>
   <Dialog
-    v-on:keyup.esc="
-      () => {
-        emit('close')
-      }
-    "
-    :visible="true"
+    v-model:visible="visible"
     modal
+    @hide="emit('close')"
     header="Новая задача"
     class="min-w-[300px] max-w-[500px] w-full"
-    :closable="false"
     :pt="{
       root: ['mx-5'],
-      header: ['!flex !items-center !justify-center !text-center'],
+      header: ['!flex !items-center !text-center'],
     }"
   >
     <Form
