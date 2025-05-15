@@ -86,7 +86,7 @@ const onDragEnd = (event) => {
       />
     </VueDraggableNext>
     <div v-else class="h-full flex items-center">
-      <img src="@/assets/empty.svg" alt="empty-list" class="w-[300px] mx-auto my-auto" />
+      <img src="@/assets/empty.svg" alt="Пустой список" class="w-[300px] mx-auto my-auto" />
     </div>
   </div>
 </template>

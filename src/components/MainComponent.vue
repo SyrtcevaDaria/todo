@@ -11,6 +11,7 @@ import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import PriorityChart from '@/components/charts/PriorityChart.vue'
 import TagsChart from '@/components/charts/TagsChart.vue'
+import { TIMER_INTERVAL } from '@/models/constants.ts'
 
 const tasksStore = useTasksStore()
 const { tags, filterRules, visibleTasks, tasks, isShowStatistics } = storeToRefs(tasksStore)
@@ -42,7 +43,7 @@ const applyFilter = (
 
 onMounted(() => {
   initState()
-  savedTimerId.value = window.setInterval(saveData, 10000)
+  savedTimerId.value = window.setInterval(saveData, TIMER_INTERVAL)
 })
 onUnmounted(() => {
   if (savedTimerId.value !== null) {

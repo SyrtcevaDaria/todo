@@ -51,7 +51,7 @@ defineEmits<{ remove: [] }>()
     <div class="flex justify-between items-center !mt-auto cursor-pointer !min-h-7">
       <p v-if="formatedDate && !task.isDone">{{ formatedDate }}</p>
       <button
-        aria-label="Удалить"
+        aria-label="Удалить задачу"
         class="pi pi-trash !ml-auto !bg-transparent !border-none"
         :style="{ color: 'red', fontSize: '1.3rem' }"
         @click="$emit('remove')"

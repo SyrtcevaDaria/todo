@@ -61,6 +61,7 @@ const isClosePanel = ref(true)
       <div class="flex justify-between items-center !mt-auto cursor-pointer !min-h-7">
         <p v-if="formatedDate && !task.isDone">{{ formatedDate }}</p>
         <i
+          aria-label="Удалить задачу"
           class="pi pi-trash !ml-auto"
           :style="{ color: 'red', fontSize: '1.3rem' }"
           @click="$emit('remove')"
