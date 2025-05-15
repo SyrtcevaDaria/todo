@@ -12,7 +12,7 @@ npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Performs a project build
 
 ```sh
 npm run build
