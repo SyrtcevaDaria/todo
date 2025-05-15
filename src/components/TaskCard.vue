@@ -3,22 +3,25 @@ import { PriorityLabelMap, PriorityThemesMap, type Task } from '@/types.ts'
 import Tag from 'primevue/tag'
 import Checkbox from 'primevue/checkbox'
 import { computed } from 'vue'
-import { formatDateWithDetails } from '@/utils/formatDate.ts'
+import { formatDateWithDetails, getStartDay } from '@/utils/formatDate.ts'
 
 const task = defineModel<Task>('task', { required: true })
 const formatedDate = computed(() =>
-  task.value?.deadline ? formatDateWithDetails(task.value?.deadline) : undefined,
+  task.value?.deadline ? formatDateWithDetails(task.value?.deadline) : null,
 )
+const isOverdue = computed(
+  () =>
+    !task.value.isDone &&
+    task.value.deadline &&
+    getStartDay(new Date(task.value.deadline)) < getStartDay(new Date()),
+)
+defineEmits<{ remove: [] }>()
 </script>
 
 <template>
   <div
-    :class="
-      !task.isDone && task.deadline && new Date(task.deadline) < new Date()
-        ? 'border-red-500 bg-red-50'
-        : 'border-gray-800 bg-white'
-    "
-    class="p-4 border-2 rounded-lg shadow-md flex flex-col gap-1 !min-w-[18rem]"
+    :class="isOverdue ? 'border-red-500 bg-red-50' : 'border-gray-800 bg-white'"
+    class="p-4 border rounded-lg shadow-md flex flex-col gap-1 !min-w-[18rem]"
   >
     <div class="flex">
       <div class="flex items-center gap-2">
@@ -45,7 +48,14 @@ const formatedDate = computed(() =>
         {{ tag }}
       </div>
     </div>
-    <p v-if="formatedDate && !task.isDone" class="!mt-auto">{{ formatedDate }}</p>
+    <div class="flex justify-between items-center !mt-auto cursor-pointer !min-h-7">
+      <p v-if="formatedDate && !task.isDone">{{ formatedDate }}</p>
+      <i
+        class="pi pi-trash !ml-auto"
+        :style="{ color: 'red', fontSize: '1.3rem' }"
+        @click="$emit('remove')"
+      />
+    </div>
   </div>
 </template>
 

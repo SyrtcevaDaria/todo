@@ -8,6 +8,7 @@
 }
 
 body {
+  background: #F0FDF4;
   min-height: 100vh;
   transition: color 0.5s,
   background-color 0.5s;

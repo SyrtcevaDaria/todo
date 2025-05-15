@@ -17,16 +17,23 @@ export const useDestructiveDate = (date: Date) => {
   return { day, month, year }
 }
 
-export function formatDateWithDetails(date: Date): string {
-  const deadline = new Date(date)
-  const daysDiff = Math.round((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+export const getStartDay = (dateVal: Date) => {
+  const copy = new Date(dateVal)
+  copy.setHours(0, 0, 0, 0)
+  return copy
+}
 
-  if (daysDiff === 0) {
+export function formatDateWithDetails(date: Date): string {
+  const deadline = getStartDay(new Date(date))
+  const today = getStartDay(new Date())
+  if (deadline.getTime() === today.getTime()) {
     return 'Дедлайн сегодня'
-  } else if (daysDiff < 0) {
+  }
+  const daysDiff = Math.round((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+  const { day, month, year } = useDestructiveDate(deadline)
+  if (daysDiff < 0) {
     return `Просрочено на ${Math.abs(daysDiff)} ${definePhrase(Math.abs(daysDiff))}`
   } else {
-    const { day, month, year } = useDestructiveDate(date)
     return `Дедлайн через ${daysDiff} ${definePhrase(daysDiff)} - ${day}.${month}.${year}`
   }
 }

@@ -11,9 +11,10 @@ import Textarea from 'primevue/textarea'
 import { Form } from '@primevue/forms'
 import Message from 'primevue/message'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
-import { type Priority, PriorityThemesMap, PriorityLabelMap, type Task } from '@/types.ts'
+import { PriorityThemesMap, PriorityLabelMap, type Task } from '@/types.ts'
 import { ref } from 'vue'
 import { taskValidationSchema } from '@/models/taskValidation.ts'
+import { priorityList } from '@/models/selectOptions.ts'
 
 const hasDuplicateError = defineModel<boolean>('hasDuplicateError', { required: true })
 const emit = defineEmits<{ close: []; create: [Omit<Task, 'id' | 'isDone'>] }>()
@@ -21,24 +22,10 @@ const resolver = zodResolver(taskValidationSchema)
 const initialValues = ref<Omit<Task, 'id' | 'isDone'>>({
   name: '',
   description: '',
-  deadline: undefined,
+  deadline: null,
   tags: [],
-  priority: undefined,
+  priority: null,
 })
-
-const priorityList: {
-  label: (typeof PriorityLabelMap)[keyof typeof PriorityLabelMap]
-  value: Priority
-  theme: (typeof PriorityThemesMap)[keyof typeof PriorityThemesMap]
-}[] = [
-  {
-    theme: 'info',
-    value: 'low',
-    label: 'Низкий',
-  },
-  { value: 'medium', label: 'Средний', theme: 'warn' },
-  { value: 'high', label: 'Высокий', theme: 'danger' },
-]
 
 const onFormSubmit = ({ valid, values }: { valid: boolean; values: Record<string, any> }) => {
   if (valid) {
@@ -61,12 +48,18 @@ const onTagToggle = ($form: any, e: { value: string[] }) => {
 
 <template>
   <Dialog
+    v-on:keyup.esc="
+      () => {
+        emit('close')
+      }
+    "
     :visible="true"
     modal
     header="Новая задача"
     class="min-w-[300px] max-w-[500px] w-full"
     :closable="false"
     :pt="{
+      root: ['mx-5'],
       header: ['!flex !items-center !justify-center !text-center'],
     }"
   >
@@ -103,7 +96,7 @@ const onTagToggle = ($form: any, e: { value: string[] }) => {
         />
         <label for="description">Описание</label>
       </FloatLabel>
-      <FloatLabel variant="in">
+      <FloatLabel variant="in" :pt="{ root: ['-mt-2'] }">
         <DatePicker
           id="datepicker-24h"
           inputId="deadline"
@@ -112,7 +105,6 @@ const onTagToggle = ($form: any, e: { value: string[] }) => {
           fluid
           :manualInput="false"
           variant="filled"
-          :min-date="new Date()"
           @update:model-value="hasDuplicateError = false"
         />
         <label for="deadline">Срок выполнения</label>
