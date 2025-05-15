@@ -103,6 +103,7 @@ const onTagToggle = ($form: any, e: { value: string[] }) => {
           name="deadline"
           hourFormat="24"
           fluid
+          dateFormat="dd.mm.yy"
           :manualInput="false"
           variant="filled"
           @update:model-value="hasDuplicateError = false"
